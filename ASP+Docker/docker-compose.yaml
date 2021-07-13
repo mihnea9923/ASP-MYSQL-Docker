@@ -1,0 +1,26 @@
+version : '3'
+
+services:
+    mssql-server:
+        image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+        environment:
+            ACCEPT_EULA : "Y"
+            SA_PASSWORD : "Docker2021"
+            MSSQL_PID : Express
+        ports:
+            ["1433:1433"]
+        volumes:
+            - dataasp:/var/lib/mysql    
+    book-app:
+        build: .
+        environment:
+            DatabaseServer : "mssql-server"
+            DatabasePort : "1433"
+            DatabaseUser : "SA"
+            DatabasePassword : "Docker2021"
+            DatabaseName : "booksdb"
+        ports:
+            ["8090:80"]
+volumes:
+    dataasp:
+        driver: local
